@@ -1,6 +1,22 @@
 import { GoogleGenAI } from "@google/genai";
 
-// The API key is expected to be available in the execution environment.
-// The GoogleGenAI constructor will use the provided process.env.API_KEY.
-// If the key is missing or invalid, the library itself will throw an error upon an API call.
-export const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+let ai: GoogleGenAI | null = null;
+
+/**
+ * Lazily initializes and returns a singleton instance of the GoogleGenAI client.
+ * This prevents the app from crashing on load if the API key isn't available
+ * and allows for graceful error handling in the UI.
+ * @returns {GoogleGenAI} The initialized GoogleGenAI client.
+ * @throws {Error} If the API_KEY environment variable is not set.
+ */
+export const getAiClient = (): GoogleGenAI => {
+    if (!ai) {
+        const apiKey = process.env.API_KEY;
+        if (!apiKey) {
+            // This error will be caught by the UI and displayed to the user.
+            throw new Error("API_KEY environment variable not set. Please ensure it is configured in your deployment settings.");
+        }
+        ai = new GoogleGenAI({ apiKey });
+    }
+    return ai;
+};

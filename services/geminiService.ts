@@ -1,4 +1,4 @@
-import { ai } from './geminiClient'; // Centralized AI client
+import { getAiClient } from './geminiClient'; // Use the lazy-loading client
 import { PropertyData } from '../types';
 
 const MODEL_NAME = 'gemini-2.5-flash';
@@ -9,6 +9,7 @@ export interface FetchedPropertyAnalysis {
 }
 
 export const getPropertyDataFromAddress = async (address: string, propertyType: string): Promise<FetchedPropertyAnalysis> => {
+    const ai = getAiClient(); // Get the initialized client
     const prompt = `
         You are a real estate data analysis tool. Your task is to find financial data for the property at the following address and of the specified type. Use Google Search to find the most accurate and up-to-date information possible.
 
@@ -83,11 +84,15 @@ export const getPropertyDataFromAddress = async (address: string, propertyType: 
 
     } catch (error) {
         console.error("Error calling or parsing Gemini response:", error);
+        if (error instanceof Error && error.message.includes("API_KEY")) {
+            throw error;
+        }
         throw new Error("Failed to retrieve property data. The AI returned an unexpected format or an error occurred.");
     }
 };
 
 export const getInvestmentAnalysis = async (propertyData: PropertyData): Promise<string> => {
+    const ai = getAiClient(); // Get the initialized client
     const prompt = `
         You are a seasoned real estate investment advisor. Analyze the following investment property data and provide actionable advice.
         The user is looking for two types of recommendations:
@@ -131,6 +136,9 @@ export const getInvestmentAnalysis = async (propertyData: PropertyData): Promise
         return response.text;
     } catch (error) {
         console.error("Error calling Gemini API:", error);
+        if (error instanceof Error && error.message.includes("API_KEY")) {
+            throw error;
+        }
         throw new Error("Failed to generate analysis from AI service.");
     }
 };

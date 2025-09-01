@@ -25,9 +25,9 @@ export const MetricCard: React.FC<MetricCardProps> = ({ title, value, isCurrency
   const valueColorClass = value >= 0 ? 'text-positive' : 'text-negative';
 
   return (
-    <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-      <p className="text-sm font-medium text-gray-500">{title}</p>
-      <p className={`text-2xl font-bold ${valueColorClass}`}>{formatValue()}</p>
+    <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 text-center">
+      <p className="text-sm font-medium text-secondary">{title}</p>
+      <p className={`text-2xl font-semibold ${valueColorClass} mt-1`}>{formatValue()}</p>
     </div>
   );
 };

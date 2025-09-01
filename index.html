@@ -5,17 +5,38 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Real Estate Investment Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
             colors: {
-              'brand-primary': '#0D47A1',
-              'brand-secondary': '#1565C0',
-              'brand-accent': '#2196F3',
-              'positive': '#2E7D32',
-              'negative': '#C62828',
+              primary: {
+                DEFAULT: '#1E40AF', // A richer blue
+                '50': '#EFF6FF',
+                '100': '#DBEAFE',
+                '200': '#BFDBFE',
+                '300': '#93C5FD',
+                '400': '#60A5FA',
+                '500': '#3B82F6',
+                '600': '#2563EB',
+                '700': '#1D4ED8',
+                '800': '#1E40AF',
+                '900': '#1E3A8A',
+              },
+              secondary: '#4B5563', // A neutral gray for text
+              accent: {
+                DEFAULT: '#F59E0B', // Amber for contrast
+                'hover': '#D97706',
+              },
+              positive: '#16A34A', // A nice green
+              negative: '#DC2626', // A clear red
             },
           },
         },
@@ -33,7 +54,7 @@
 }
 </script>
 </head>
-  <body class="bg-gray-100">
+  <body class="bg-slate-50">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

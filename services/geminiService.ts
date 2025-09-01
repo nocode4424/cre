@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { ai } from './geminiClient'; // Centralized AI client
 import { PropertyData } from '../types';
 
 const MODEL_NAME = 'gemini-2.5-flash';
@@ -9,11 +9,6 @@ export interface FetchedPropertyAnalysis {
 }
 
 export const getPropertyDataFromAddress = async (address: string, propertyType: string): Promise<FetchedPropertyAnalysis> => {
-    if (!process.env.API_KEY) {
-        throw new Error("API_KEY environment variable not set");
-    }
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    
     const prompt = `
         You are a real estate data analysis tool. Your task is to find financial data for the property at the following address and of the specified type. Use Google Search to find the most accurate and up-to-date information possible.
 
@@ -93,12 +88,6 @@ export const getPropertyDataFromAddress = async (address: string, propertyType: 
 };
 
 export const getInvestmentAnalysis = async (propertyData: PropertyData): Promise<string> => {
-    if (!process.env.API_KEY) {
-        throw new Error("API_KEY environment variable not set");
-    }
-
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    
     const prompt = `
         You are a seasoned real estate investment advisor. Analyze the following investment property data and provide actionable advice.
         The user is looking for two types of recommendations:

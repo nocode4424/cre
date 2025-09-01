@@ -33,11 +33,17 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ dataA, dataB }
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      const isPercentage = label.includes('Rate') || label.includes('Return');
+      const formatValue = (value: number) => {
+        const fixedValue = value.toFixed(2);
+        return isPercentage ? `${fixedValue}%` : `$${Number(fixedValue).toLocaleString()}`;
+      }
+      
       return (
-        <div className="bg-white p-4 border rounded-lg shadow-lg">
-          <p className="font-bold">{label}</p>
-          <p style={{ color: '#0D47A1' }}>{`Property A: ${payload[0].value.toFixed(2)}${label.includes('Rate') || label.includes('Return') ? '%' : ''}`}</p>
-          <p style={{ color: '#2196F3' }}>{`Property B: ${payload[1].value.toFixed(2)}${label.includes('Rate') || label.includes('Return') ? '%' : ''}`}</p>
+        <div className="bg-white p-4 border rounded-xl shadow-lg">
+          <p className="font-bold mb-2">{label}</p>
+          <p style={{ color: '#1E40AF' }} className="text-sm">{`Property A: ${formatValue(payload[0].value)}`}</p>
+          <p style={{ color: '#3B82F6' }} className="text-sm">{`Property B: ${formatValue(payload[1].value)}`}</p>
         </div>
       );
     }
@@ -45,8 +51,8 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ dataA, dataB }
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold text-brand-primary mb-4">Metrics Comparison</h3>
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <h3 className="text-xl font-semibold text-primary-800 mb-4">Metrics Comparison</h3>
       <div style={{ width: '100%', height: 400 }}>
         <ResponsiveContainer>
           <BarChart
@@ -60,8 +66,8 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ dataA, dataB }
             <YAxis tickFormatter={(tick) => (tick.toLocaleString())} />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar dataKey="Property A" fill="#0D47A1" />
-            <Bar dataKey="Property B" fill="#2196F3" />
+            <Bar dataKey="Property A" fill="#1E40AF" />
+            <Bar dataKey="Property B" fill="#3B82F6" />
           </BarChart>
         </ResponsiveContainer>
       </div>

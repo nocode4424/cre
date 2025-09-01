@@ -8,7 +8,7 @@ import { AddressForm } from './components/AddressForm';
 import { ClarificationBox } from './components/ClarificationBox';
 import { getInvestmentAnalysis, getPropertyDataFromAddress } from './services/geminiService';
 import { calculateMetrics } from './utils/calculations';
-import { PropertyData, CalculatedMetrics, ViewMode, AnalyzeStep, PropertyType, propertyTypes } from './types';
+import { PropertyData, CalculatedMetrics, ViewMode, AnalyzeStep, PropertyType } from './types';
 
 const initialPropertyData: PropertyData = {
   purchasePrice: 300000,
@@ -64,8 +64,8 @@ const App: React.FC = () => {
       const result = await getInvestmentAnalysis(propertyA);
       setAnalysisResult(result);
       setAnalyzeStep(AnalyzeStep.SHOW_RESULTS);
-    } catch (err) {
-      setError('Failed to get analysis. Please check your API key and try again.');
+    } catch (err: any) {
+      setError(err.message || 'Failed to get analysis. Please try again.');
       setAnalyzeStep(AnalyzeStep.CONFIRM_DATA);
       console.error(err);
     } finally {
@@ -82,8 +82,8 @@ const App: React.FC = () => {
   };
 
   const renderMetrics = (metrics: CalculatedMetrics, title: string) => (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold text-brand-primary mb-4">{title}</h3>
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <h3 className="text-xl font-semibold text-primary-800 mb-4">{title}</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <MetricCard title="Monthly Cash Flow" value={metrics.monthlyCashFlow} isCurrency />
         <MetricCard title="Annual Cash Flow" value={metrics.annualCashFlow} isCurrency />
@@ -106,9 +106,10 @@ const App: React.FC = () => {
         );
       case AnalyzeStep.FETCHING_DATA:
          return (
-            <div className="flex flex-col items-center justify-center text-center p-12 bg-white rounded-lg shadow-md">
-                <div className="w-12 h-12"><Loader/></div>
-                <p className="text-gray-600 mt-4 text-lg">Finding property data... This may take a moment.</p>
+            <div className="flex flex-col items-center justify-center text-center p-12 bg-white rounded-xl shadow-sm border border-gray-200">
+                <Loader className="h-12 w-12 text-primary-600"/>
+                <p className="text-secondary mt-4 text-lg font-medium">Searching for property data...</p>
+                <p className="text-gray-500 mt-1">This may take a moment.</p>
             </div>
         );
       case AnalyzeStep.CONFIRM_DATA:
@@ -117,27 +118,28 @@ const App: React.FC = () => {
         return (
           <div className="space-y-8">
              <div className="flex justify-end">
-                <button onClick={resetAnalysis} className="text-sm font-semibold text-brand-secondary hover:underline transition-colors">Start New Analysis</button>
+                <button onClick={resetAnalysis} className="text-sm font-semibold text-primary-700 hover:text-primary-900 transition-colors">Start New Analysis</button>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
               <div className="space-y-6">
                 <ClarificationBox questions={clarifyingQuestions} />
                 <PropertyInputForm title="Confirm & Refine Property Data" propertyData={propertyA} setPropertyData={setPropertyA} />
               </div>
-              <div className="bg-white p-6 rounded-lg shadow-md lg:sticky top-8">
-                <h3 className="text-xl font-bold text-brand-primary mb-4">AI-Powered Analysis</h3>
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 lg:sticky top-8">
+                <h3 className="text-xl font-semibold text-primary-800 mb-4">AI-Powered Analysis</h3>
                 <button
                   onClick={handleAnalysis}
                   disabled={isLoading || analyzeStep === AnalyzeStep.ANALYZING}
-                  className="w-full bg-brand-accent text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-secondary transition duration-300 disabled:bg-gray-400 flex items-center justify-center"
+                  className="w-full bg-accent text-white font-bold py-3 px-4 rounded-lg hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition duration-300 disabled:bg-gray-400 flex items-center justify-center shadow-sm"
                 >
                   {analyzeStep === AnalyzeStep.ANALYZING ? <Loader/> : 'Generate Recommendations'}
                 </button>
                 {error && <p className="text-negative mt-4">{error}</p>}
                 
                 {analyzeStep === AnalyzeStep.ANALYZING && (
-                  <div className="text-center mt-4">
-                    <p className="text-gray-600">Analyzing your property...</p>
+                  <div className="text-center mt-6">
+                    <Loader className="h-8 w-8 text-primary-600 mx-auto"/>
+                    <p className="text-secondary mt-3">Analyzing your property...</p>
                   </div>
                 )}
 
@@ -151,22 +153,24 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-      <header className="bg-brand-primary shadow-lg">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-wide">Real Estate Investment Analyzer</h1>
-           <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-          </svg>
+    <div className="min-h-screen bg-slate-50 text-gray-800 font-sans">
+      <header className="bg-primary-800 shadow-md">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-5 flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+             <svg xmlns="http://www.w3.org/2000/svg" className="h-9 w-9 text-white" viewBox="0 0 20 20" fill="currentColor">
+               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Investment Analyzer</h1>
+          </div>
         </div>
       </header>
 
       <main className="container mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="bg-white rounded-lg shadow-md p-4 mb-8">
-          <div className="flex justify-center space-x-2 sm:space-x-4" role="tablist" aria-label="Application modes">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-2 mb-8 max-w-md mx-auto">
+          <div className="flex justify-center space-x-2" role="tablist" aria-label="Application modes">
             <button
               onClick={() => { setViewMode(ViewMode.ANALYZE); resetAnalysis(); }}
-              className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold rounded-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-accent ${viewMode === ViewMode.ANALYZE ? 'bg-brand-primary text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              className={`w-full px-4 sm:px-6 py-2.5 text-sm sm:text-base font-semibold rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 ${viewMode === ViewMode.ANALYZE ? 'bg-primary-700 text-white shadow' : 'bg-transparent text-gray-600 hover:bg-primary-50'}`}
               role="tab"
               aria-selected={viewMode === ViewMode.ANALYZE}
             >
@@ -174,7 +178,7 @@ const App: React.FC = () => {
             </button>
             <button
               onClick={() => setViewMode(ViewMode.COMPARE)}
-              className={`px-4 sm:px-6 py-3 text-sm sm:text-base font-semibold rounded-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-accent ${viewMode === ViewMode.COMPARE ? 'bg-brand-primary text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              className={`w-full px-4 sm:px-6 py-2.5 text-sm sm:text-base font-semibold rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 ${viewMode === ViewMode.COMPARE ? 'bg-primary-700 text-white shadow' : 'bg-transparent text-gray-600 hover:bg-primary-50'}`}
               role="tab"
               aria-selected={viewMode === ViewMode.COMPARE}
             >

@@ -31,7 +31,7 @@ const InputField: React.FC<{
         id={id}
         value={value}
         onChange={onChange}
-        className={`w-full p-2 border border-gray-300 rounded-md focus:ring-brand-accent focus:border-brand-accent ${prefix ? 'pl-7' : ''} ${suffix ? 'pr-12' : ''}`}
+        className={`w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition ${prefix ? 'pl-7' : ''} ${suffix ? 'pr-12' : ''}`}
         placeholder="0"
       />
       {suffix && (
@@ -54,9 +54,9 @@ export const PropertyInputForm: React.FC<PropertyInputFormProps> = ({ title, pro
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-bold text-brand-primary mb-6">{title}</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <h3 className="text-xl font-semibold text-primary-800 mb-6">{title}</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
         <InputField label="Purchase Price" id="purchasePrice" value={propertyData.purchasePrice} onChange={handleChange} prefix="$" />
         <InputField label="Down Payment" id="downPayment" value={propertyData.downPayment} onChange={handleChange} prefix="$" />
         <InputField label="Closing Costs" id="closingCosts" value={propertyData.closingCosts} onChange={handleChange} prefix="$" />
